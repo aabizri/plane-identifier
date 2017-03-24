@@ -3,16 +3,13 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
-	"log"
 	"net/http"
-	"os"
 )
 
-var logger *log.Logger
-
 func init() {
-	logger = log.New(os.Stdout, "", log.LstdFlags|log.Lshortfile)
+	flag.Parse()
 }
 
 type Input struct {
@@ -62,18 +59,21 @@ func (input *Input) Validate() error {
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
-	// Log
-	log.Printf("Received request:\n%v\n", r.Body)
+	// Log the request
+	err := logRequest(r)
+	if err != nil {
+		logger.Printf("Handler: request logging failed: %v", err)
+	}
 
 	// First let's parse the input
 	log.Print("Decoding...")
 	dec := json.NewDecoder(r.Body)
 	defer r.Body.Close()
 	var input *Input = &Input{}
-	err := dec.Decode(input)
+	err = dec.Decode(input)
 	if err != nil {
-		msg := fmt.Sprintf("Error: while decoding json: %v", err)
-		log.Print(msg)
+		msg := fmt.Sprintf("JSON Decoding failed: %v", err)
+		log.Printf("Handler: %v", msg)
 		fmt.Fprint(w, msg)
 		return
 	}
@@ -83,8 +83,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	// Let's validate it
 	err = input.Validate()
 	if err != nil {
-		msg := fmt.Sprintf("Error: Validation error: %v", err)
-		log.Print(msg)
+		msg := fmt.Sprintf("Validation error: %v", err)
+		log.Printf("Handler: %s", msg)
 		fmt.Fprint(w, msg)
 		return
 	}
@@ -98,7 +98,9 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	enc.SetIndent("", "\t")
 	err = enc.Encode(output)
 	if err != nil {
-		fmt.Fprintf(w, "Error: json encode: %v", err)
+		msg := fmt.Sprintf("JSON Encoding failed: %v", err)
+		log.Printf("Handler: %s", msg)
+		fmt.Fprint(w, msg)
 		return
 	}
 	log.Print("DONE\n")
