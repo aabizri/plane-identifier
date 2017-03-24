@@ -66,25 +66,25 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// First let's parse the input
-	log.Print("Decoding...")
+	logger.Print("Decoding...")
 	dec := json.NewDecoder(r.Body)
 	defer r.Body.Close()
 	var input *Input = &Input{}
 	err = dec.Decode(input)
 	if err != nil {
 		msg := fmt.Sprintf("JSON Decoding failed: %v", err)
-		log.Printf("Handler: %v", msg)
+		logger.Printf("Handler: %v", msg)
 		fmt.Fprint(w, msg)
 		return
 	}
-	log.Print("DONE\n")
-	log.Printf("%#v", *input)
+	logger.Print("DONE\n")
+	logger.Printf("%#v", *input)
 
 	// Let's validate it
 	err = input.Validate()
 	if err != nil {
 		msg := fmt.Sprintf("Validation error: %v", err)
-		log.Printf("Handler: %s", msg)
+		logger.Printf("Handler: %s", msg)
 		fmt.Fprint(w, msg)
 		return
 	}
@@ -93,17 +93,17 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	output := process(input)
 
 	// Encode it
-	log.Print("Encoding..")
+	logger.Print("Encoding..")
 	enc := json.NewEncoder(w)
 	enc.SetIndent("", "\t")
 	err = enc.Encode(output)
 	if err != nil {
 		msg := fmt.Sprintf("JSON Encoding failed: %v", err)
-		log.Printf("Handler: %s", msg)
+		logger.Printf("Handler: %s", msg)
 		fmt.Fprint(w, msg)
 		return
 	}
-	log.Print("DONE\n")
+	logger.Print("DONE\n")
 
 	// Return
 	return
@@ -112,5 +112,5 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/", Handler)
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	logger.Fatal(http.ListenAndServe(portStr, nil))
 }
