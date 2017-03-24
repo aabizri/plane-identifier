@@ -6,6 +6,12 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"strconv"
+)
+
+var (
+	portFlag = flag.Uint("p", 8080, "Port to listen to")
+	pathFlag = flag.String("path", "/", "Path to endpoint folder")
 )
 
 func init() {
@@ -110,7 +116,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/", Handler)
+	http.HandleFunc(*pathFlag, Handler)
 
+	portStr := ":" + strconv.FormatUint(uint64(*portFlag), 10)
 	logger.Fatal(http.ListenAndServe(portStr, nil))
 }
