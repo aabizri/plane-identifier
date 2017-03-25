@@ -16,7 +16,7 @@ In the directory:
 Flags:
 - `-p` allows you to select the port to listen to (ex: `-p 8080`)
 - `-logpath` is the directory in which to log requests (ex: `-logpath /tmp/plane`)
-- `-path` is the path to listen to (ex: `-path /task1/input`)
+- `-path` is the path to listen to (ex: `-path /task2/input`)
 
 Calling without flags is equivalent to using `-p 8080 -logpath "/tmp/" -path "/"`
 
