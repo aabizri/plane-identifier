@@ -1,5 +1,8 @@
-# plane-identifier is a web service accessible via a REST API for identifying a plane based upon measurements
+# plane-identifier [![Build Status](https://travis-ci.org/aabizri/plane-identifier.svg?branch=dev)](https://travis-ci.org/aabizri/plane-identifier)
 
+This is a web service accessible via a REST API for identifying a plane based upon measurements.
+
+## Introduction
 This project was developped for the [2017 Prague Hackaton](https://praguehackaton.com).
 
 Built by [Alexandre A. Bizri](https://github.com/aabizri), [Marin Godechot](https://github.com/houguiram) & Camille Marchetti (Team K-1000).
